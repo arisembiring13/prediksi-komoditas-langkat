@@ -3,7 +3,6 @@ from functools import wraps
 from flask import Flask, redirect, render_template, request, session, url_for
 import numpy as np
 import pandas as pd
-from prophet import Prophet
 from sklearn.metrics import (
     mean_absolute_error,
     mean_absolute_percentage_error,
@@ -537,6 +536,7 @@ def hapus_data(id):
 @app.route('/prediksi', methods=['GET', 'POST'])
 @login_required
 def prediksi():
+    from prophet import Prophet
     db = koneksi()
     cursor = db.cursor()
 
@@ -853,6 +853,7 @@ def hapus_pengguna(id):
 @app.route('/evaluasi', methods=['GET', 'POST'])
 @login_required
 def evaluasi():
+    from prophet import Prophet
     db = koneksi()
     cursor = db.cursor()
 
