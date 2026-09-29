@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Data Produksi - Sistem Prediksi Langkat</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f4f6f9;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .card-custom {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        .btn-primary-custom {
+            background-color: #2e7d32;
+            border: none;
+        }
+        .btn-primary-custom:hover {
+            background-color: #1b5e20;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success shadow-sm">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="/dashboard">
+                <i class="fa-solid me-2"></i>Prediksi Komoditas Langkat
+            </a>
+            <div class="ms-auto">
+                <a href="/data" class="btn btn-outline-light btn-sm">
+                    <i class="fa-solid fa-arrow-left me-1"></i> Kembali ke Data
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content -->
+    <div class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-md-7 col-lg-6">
+                <div class="card card-custom bg-white p-4">
+                    <div class="d-flex align-items-center mb-4 pb-2 border-bottom">
+                        <i class="fa-solid fa-pen-to-square text-success fs-3 me-3"></i>
+                        <div>
+                            <h4 class="mb-0 fw-bold text-dark">Edit Data Produksi</h4>
+                            <small class="text-muted">Ubah rincian data historis komoditas</small>
+                        </div>
+                    </div>
+
+                    <form action="/edit_data/{{ row['id'] if row is mapping else row[0] }}" method="POST">
+                        
+                        <!-- Nama Komoditas -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Nama Komoditas</label>
+                            <input type="text" 
+                                   name="komoditas" 
+                                   class="form-control" 
+                                   value="{{ row['komoditas'] if row is mapping else row[1] }}" 
+                                   list="komoditas_list"
+                                   required>
+                            <datalist id="komoditas_list">
+                                {% for k in daftar_komoditas %}
+                                    <option value="{{ k }}"></option>
+                                {% endfor %}
+                            </datalist>
+                        </div>
+
+                        <!-- Tahun -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Tahun</label>
+                            <input type="number" 
+                                   name="tahun" 
+                                   class="form-control" 
+                                   value="{{ row['tahun'] if row is mapping else row[2] }}" 
+                                   min="1990" 
+                                   max="2100" 
+                                   required>
+                        </div>
+
+                        <!-- Jumlah Produksi -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Jumlah Produksi</label>
+                            <input type="number" 
+                                   step="any" 
+                                   name="produksi" 
+                                   class="form-control" 
+                                   value="{{ row['produksi'] if row is mapping else row[3] }}" 
+                                   required>
+                        </div>
+
+                        <!-- Satuan -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Satuan</label>
+                            <input type="text" 
+                                   name="satuan" 
+                                   class="form-control" 
+                                   value="{{ row['satuan'] if row is mapping and 'satuan' in row else (row[4] if row|length > 4 else 'Ton') }}">
+                        </div>
+
+                        <!-- Keterangan -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Keterangan</label>
+                            <textarea name="keterangan" class="form-control" rows="3">{{ row['keterangan'] if row is mapping and 'keterangan' in row else (row[5] if row|length > 5 else '-') }}</textarea>
+                        </div>
+
+                        <!-- Tombol Aksi -->
+                        <div class="d-flex justify-content-between align-items-center pt-2">
+                            <a href="/data" class="btn btn-secondary px-4">Batal</a>
+                            <button type="submit" class="btn btn-primary-custom text-white px-4 py-2 fw-semibold">
+                                <i class="fa-solid fa-save me-1"></i> Simpan Perubahan
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

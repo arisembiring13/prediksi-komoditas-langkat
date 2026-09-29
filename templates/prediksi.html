@@ -1,0 +1,1527 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Prediksi Produksi Komoditas Perkebunan</title>
+
+    <!-- Bootstrap -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <!-- FontAwesome -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    >
+
+    <!-- Google Font -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background: #f4f6f9;
+            color: #1f2937;
+        }
+
+
+        /* =====================================
+           SIDEBAR
+        ===================================== */
+
+        .sidebar {
+            width: 260px;
+            height: 100vh;
+            background: #0B192C;
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+            box-shadow: 3px 0 15px rgba(0,0,0,0.08);
+        }
+
+
+        .sidebar-brand {
+            padding: 20px 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+
+
+        .brand-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+
+        /* LOGO PREDIKSI LANGKAT */
+        .brand-logo {
+            width: 55px;
+            height: 55px;
+            object-fit: contain;
+            flex-shrink: 0;
+            display: block;
+        }
+
+
+        .brand-title {
+            color: white;
+            font-size: 13px;
+            font-weight: 700;
+            line-height: 1.35;
+        }
+
+
+        .brand-subtitle {
+            color: #94a3b8;
+            font-size: 11px;
+            margin-top: 3px;
+        }
+
+
+        .sidebar-menu {
+            padding: 22px 14px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+
+        .menu-title {
+            color: #64748b;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 0 12px;
+            margin-bottom: 10px;
+        }
+
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            color: #cbd5e1;
+            text-decoration: none;
+            padding: 12px 14px;
+            border-radius: 10px;
+            margin-bottom: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+
+
+        .sidebar-link i {
+            width: 20px;
+            text-align: center;
+        }
+
+
+        .sidebar-link:hover {
+            color: white;
+            background: rgba(255,255,255,0.08);
+        }
+
+
+        .sidebar-link.active {
+            background: #2563eb;
+            color: white;
+        }
+
+
+        /* =====================================
+           USER SIDEBAR
+        ===================================== */
+
+        .sidebar-user {
+            border-top: 1px solid rgba(255,255,255,0.08);
+            padding: 18px;
+        }
+
+
+        .user-box {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            margin-bottom: 12px;
+        }
+
+
+        .user-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: #1e40af;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+
+        .user-name {
+            color: white;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+
+        .user-role {
+            color: #94a3b8;
+            font-size: 11px;
+        }
+
+
+        .logout-btn {
+            display: block;
+            width: 100%;
+            text-decoration: none;
+            color: #fecaca;
+            border: 1px solid rgba(239,68,68,0.25);
+            padding: 9px;
+            text-align: center;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+
+        .logout-btn:hover {
+            background: #dc2626;
+            color: white;
+        }
+
+
+        /* =====================================
+           MAIN
+        ===================================== */
+
+        .main-content {
+            margin-left: 260px;
+            min-height: 100vh;
+        }
+
+
+        /* =====================================
+           HEADER
+        ===================================== */
+
+        .top-header {
+            height: 70px;
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            position: sticky;
+            top: 0;
+            z-index: 900;
+        }
+
+
+        .page-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin: 0;
+            color: #111827;
+        }
+
+
+        .page-subtitle {
+            font-size: 12px;
+            color: #64748b;
+            margin: 2px 0 0;
+        }
+
+
+        .header-user {
+            color: #64748b;
+            font-size: 13px;
+        }
+
+
+        /* =====================================
+           CONTENT
+        ===================================== */
+
+        .content-area {
+            padding: 28px;
+        }
+
+
+        /* =====================================
+           PREDICTION FORM CARD
+        ===================================== */
+
+        .prediction-card {
+            background: white;
+            border-radius: 16px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.05);
+            padding: 25px;
+            margin-bottom: 24px;
+        }
+
+
+        .prediction-heading {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 5px;
+        }
+
+
+        .prediction-heading-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            background: #dbeafe;
+            color: #2563eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+
+        .prediction-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #111827;
+            margin: 0;
+        }
+
+
+        .prediction-description {
+            color: #64748b;
+            font-size: 12px;
+            margin: 5px 0 22px 54px;
+        }
+
+
+        .form-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #334155;
+            margin-bottom: 7px;
+        }
+
+
+        .form-select {
+            height: 44px;
+            border-radius: 9px;
+            border: 1px solid #cbd5e1;
+            font-size: 13px;
+        }
+
+
+        .form-select:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+        }
+
+
+        .btn-prediksi {
+            height: 44px;
+            border: none;
+            border-radius: 9px;
+            background: #2563eb;
+            color: white;
+            font-size: 13px;
+            font-weight: 700;
+            width: 100%;
+            transition: 0.2s;
+        }
+
+
+        .btn-prediksi:hover {
+            background: #1d4ed8;
+            color: white;
+        }
+
+
+        /* =====================================
+           ERROR
+        ===================================== */
+
+        .alert-custom {
+            border-radius: 12px;
+            border: none;
+            font-size: 13px;
+        }
+
+
+        /* =====================================
+           STAT CARDS
+        ===================================== */
+
+        .stat-card {
+            border-radius: 14px;
+            border: 1px solid #e5e7eb;
+            background: white;
+            padding: 19px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.04);
+            height: 100%;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+
+        .stat-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+
+        .stat-blue {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+
+
+        .stat-green {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+
+        .stat-orange {
+            background: #ffedd5;
+            color: #ea580c;
+        }
+
+
+        .stat-purple {
+            background: #f3e8ff;
+            color: #9333ea;
+        }
+
+
+        .stat-label {
+            color: #64748b;
+            font-size: 11px;
+            font-weight: 600;
+            line-height: 1.4;
+            margin-bottom: 4px;
+        }
+
+
+        .stat-value {
+            color: #111827;
+            font-size: 18px;
+            font-weight: 700;
+            line-height: 1.3;
+        }
+
+
+        .stat-value-green {
+            color: #16a34a;
+        }
+
+
+        /* =====================================
+           RESULT CARDS
+        ===================================== */
+
+        .result-card {
+            background: white;
+            border-radius: 16px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.05);
+            padding: 23px;
+            height: 100%;
+        }
+
+
+        .result-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 5px;
+        }
+
+
+        .result-description {
+            font-size: 11px;
+            color: #64748b;
+            margin-bottom: 20px;
+        }
+
+
+        /* =====================================
+           CHART
+        ===================================== */
+
+        .chart-container {
+            position: relative;
+            height: 350px;
+            width: 100%;
+        }
+
+
+        /* =====================================
+           TABLE
+        ===================================== */
+
+        .table-responsive {
+            border-radius: 10px;
+            overflow: auto;
+        }
+
+
+        .prediction-table {
+            margin-bottom: 0;
+            font-size: 12px;
+        }
+
+
+        .prediction-table thead th {
+            background: #f8fafc;
+            color: #334155;
+            font-size: 11px;
+            font-weight: 700;
+            white-space: nowrap;
+            vertical-align: middle;
+            padding: 11px 8px;
+        }
+
+
+        .prediction-table tbody td {
+            vertical-align: middle;
+            padding: 10px 8px;
+        }
+
+
+        .prediction-number {
+            color: #2563eb;
+            font-weight: 700;
+        }
+
+
+        /* =====================================
+           INFO
+        ===================================== */
+
+        .prediction-info {
+            background: #eff6ff;
+            border: 1px solid #dbeafe;
+            color: #475569;
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin-top: 20px;
+            font-size: 11px;
+            line-height: 1.7;
+        }
+
+
+        /* =====================================
+           MOBILE
+        ===================================== */
+
+        .mobile-menu-button {
+            display: none;
+        }
+
+
+        @media(max-width: 992px) {
+
+            .sidebar {
+                transform: translateX(-100%);
+                transition: .3s;
+            }
+
+            .sidebar.show {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .mobile-menu-button {
+                display: inline-block;
+            }
+
+            .content-area {
+                padding: 18px;
+            }
+
+        }
+
+
+        @media(max-width: 576px) {
+
+            .top-header {
+                padding: 0 15px;
+            }
+
+            .prediction-description {
+                margin-left: 0;
+            }
+
+            .page-subtitle {
+                display: none;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================
+     SIDEBAR
+===================================== -->
+
+<div class="sidebar" id="sidebar">
+
+
+    <!-- BRAND -->
+    <div class="sidebar-brand">
+
+        <div class="brand-wrapper">
+
+            <img
+                src="{{ url_for('static', filename='images/logo.png') }}"
+                alt="Logo Prediksi Langkat"
+                class="brand-logo"
+            >
+
+            <div>
+
+                <div class="brand-title">
+                    Sistem Prediksi<br>
+                    Komoditas Perkebunan
+                </div>
+
+                <div class="brand-subtitle">
+                    Kabupaten Langkat
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- MENU -->
+    <div class="sidebar-menu">
+
+        <div class="menu-title">
+            Menu Utama
+        </div>
+
+
+        <!-- BERANDA -->
+        <a
+            href="{{ url_for('dashboard') }}"
+            class="sidebar-link"
+        >
+            <i class="fas fa-home"></i>
+            <span>Beranda</span>
+        </a>
+
+
+        <!-- DATA PRODUKSI -->
+        <a
+            href="{{ url_for('data') }}"
+            class="sidebar-link"
+        >
+            <i class="fas fa-database"></i>
+            <span>Data Produksi</span>
+        </a>
+
+
+        <!-- PREDIKSI -->
+        <a
+            href="{{ url_for('prediksi') }}"
+            class="sidebar-link active"
+        >
+            <i class="fas fa-chart-line"></i>
+            <span>Prediksi</span>
+        </a>
+
+
+        <!-- EVALUASI -->
+        <a
+            href="{{ url_for('evaluasi') }}"
+            class="sidebar-link"
+        >
+            <i class="fas fa-chart-bar"></i>
+            <span>Evaluasi</span>
+        </a>
+
+
+        <!-- KELOLA PENGGUNA KHUSUS ADMIN -->
+        {% if session.get('role') == 'admin' %}
+
+        <a
+            href="{{ url_for('kelola_pengguna') }}"
+            class="sidebar-link"
+        >
+            <i class="fas fa-users-cog"></i>
+            <span>Kelola Pengguna</span>
+        </a>
+
+        {% endif %}
+
+
+        <!-- TENTANG -->
+        <a
+            href="{{ url_for('tentang') }}"
+            class="sidebar-link"
+        >
+            <i class="fas fa-circle-info"></i>
+            <span>Tentang</span>
+        </a>
+
+    </div>
+
+
+    <!-- USER -->
+    <div class="sidebar-user">
+
+        <div class="user-box">
+
+            <div class="user-avatar">
+                <i class="fas fa-user"></i>
+            </div>
+
+            <div>
+
+                <div class="user-name">
+
+                    {{ session.get(
+                        'nama_user',
+                        session.get(
+                            'username',
+                            'Pengguna'
+                        )
+                    ) }}
+
+                </div>
+
+                <div class="user-role">
+
+                    {% if session.get('role') == 'admin' %}
+                        Administrator
+                    {% else %}
+                        Pengguna
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <a
+            href="{{ url_for('logout') }}"
+            class="logout-btn"
+        >
+            <i class="fas fa-right-from-bracket me-1"></i>
+            Logout
+        </a>
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================
+     MAIN CONTENT
+===================================== -->
+
+<div class="main-content">
+
+
+    <!-- HEADER -->
+    <div class="top-header">
+
+        <div class="d-flex align-items-center gap-3">
+
+            <button
+                class="btn btn-outline-secondary mobile-menu-button"
+                onclick="toggleSidebar()"
+                type="button"
+            >
+                <i class="fas fa-bars"></i>
+            </button>
+
+
+            <div>
+
+                <h5 class="page-title">
+                    Prediksi Produksi
+                </h5>
+
+                <p class="page-subtitle">
+                    Prediksi produksi komoditas perkebunan menggunakan algoritma Prophet
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="header-user">
+
+            <i class="fas fa-user-circle me-1"></i>
+
+            {{ session.get(
+                'nama_user',
+                session.get(
+                    'username',
+                    'Pengguna'
+                )
+            ) }}
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================
+         CONTENT
+    ===================================== -->
+
+    <div class="content-area">
+
+
+        <!-- =====================================
+             FORM PREDIKSI
+        ===================================== -->
+
+        <div class="prediction-card">
+
+
+            <div class="prediction-heading">
+
+                <div class="prediction-heading-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+
+                <div>
+                    <h4 class="prediction-title">
+                        Prediksi Produksi Komoditas Perkebunan
+                    </h4>
+                </div>
+
+            </div>
+
+
+            <div class="prediction-description">
+
+                Pilih jenis komoditas dan jumlah tahun prediksi,
+                kemudian jalankan proses prediksi menggunakan algoritma Prophet.
+
+            </div>
+
+
+            <form
+                method="POST"
+                action="{{ url_for('prediksi') }}"
+            >
+
+                <div class="row g-3 align-items-end">
+
+
+                    <!-- KOMODITAS -->
+                    <div class="col-lg-5 col-md-5">
+
+                        <label class="form-label">
+                            Pilih Komoditas
+                        </label>
+
+                        <select
+                            name="komoditas"
+                            class="form-select"
+                            required
+                        >
+
+                            {% for item in komoditas_list %}
+
+                            <option
+                                value="{{ item }}"
+                                {% if item == komoditas_terpilih %}
+                                    selected
+                                {% endif %}
+                            >
+                                {{ item }}
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+
+                    <!-- JUMLAH TAHUN -->
+                    <div class="col-lg-4 col-md-4">
+
+                        <label class="form-label">
+                            Jumlah Tahun Prediksi
+                        </label>
+
+                        <select
+                            name="tahun_prediksi"
+                            class="form-select"
+                            required
+                        >
+
+                            <option
+                                value="3"
+                                {% if tahun_terpilih == 3 %}
+                                    selected
+                                {% endif %}
+                            >
+                                3 Tahun
+                            </option>
+
+
+                            <option
+                                value="5"
+                                {% if tahun_terpilih == 5 %}
+                                    selected
+                                {% endif %}
+                            >
+                                5 Tahun
+                            </option>
+
+
+                            <option
+                                value="10"
+                                {% if tahun_terpilih == 10 %}
+                                    selected
+                                {% endif %}
+                            >
+                                10 Tahun
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+
+                    <!-- BUTTON -->
+                    <div class="col-lg-3 col-md-3">
+
+                        <button
+                            type="submit"
+                            class="btn-prediksi"
+                        >
+                            <i class="fas fa-play me-2"></i>
+                            Jalankan Prediksi
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+
+
+        <!-- ERROR -->
+        {% if error %}
+
+        <div class="alert alert-danger alert-custom">
+
+            <i class="fas fa-triangle-exclamation me-2"></i>
+
+            {{ error }}
+
+        </div>
+
+        {% endif %}
+
+
+
+        <!-- =====================================
+             HASIL PREDIKSI
+        ===================================== -->
+
+        {% if hasil %}
+
+
+        <!-- =====================================
+             INFORMASI RINGKAS
+        ===================================== -->
+
+        <div class="row g-4 mb-4">
+
+
+            <!-- PRODUKSI TERAKHIR -->
+            <div class="col-xl-3 col-md-6">
+
+                <div class="stat-card">
+
+                    <div class="stat-icon stat-blue">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+
+                    <div>
+
+                        <div class="stat-label">
+                            Produksi Terakhir
+                            ({{ evaluasi.tahun_terakhir }})
+                        </div>
+
+                        <div class="stat-value">
+                            {{ "{:,.2f}".format(evaluasi.produksi_terakhir) }}
+                            Ton
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- PREDIKSI AKHIR -->
+            <div class="col-xl-3 col-md-6">
+
+                <div class="stat-card">
+
+                    <div class="stat-icon stat-green">
+                        <i class="fas fa-arrow-trend-up"></i>
+                    </div>
+
+                    <div>
+
+                        <div class="stat-label">
+                            Prediksi
+                            {{ evaluasi.tahun_akhir_prediksi }}
+                        </div>
+
+                        <div class="stat-value stat-value-green">
+                            {{ "{:,.2f}".format(evaluasi.prediksi_akhir) }}
+                            Ton
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- PERTUMBUHAN -->
+            <div class="col-xl-3 col-md-6">
+
+                <div class="stat-card">
+
+                    <div class="stat-icon stat-orange">
+                        <i class="fas fa-percent"></i>
+                    </div>
+
+                    <div>
+
+                        <div class="stat-label">
+                            Pertumbuhan / Tahun
+                        </div>
+
+                        <div class="stat-value">
+                            {{ evaluasi.rata_rata_pertumbuhan }} %
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- PERIODE -->
+            <div class="col-xl-3 col-md-6">
+
+                <div class="stat-card">
+
+                    <div class="stat-icon stat-purple">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+
+                    <div>
+
+                        <div class="stat-label">
+                            Periode Prediksi
+                        </div>
+
+                        <div class="stat-value">
+
+                            {{ evaluasi.tahun_awal_prediksi }}
+                            -
+                            {{ evaluasi.tahun_akhir_prediksi }}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- =====================================
+             GRAFIK + TABEL
+        ===================================== -->
+
+        <div class="row g-4">
+
+
+            <!-- GRAFIK -->
+            <div class="col-xl-7 col-lg-7">
+
+                <div class="result-card">
+
+                    <div class="result-title">
+                        <i class="fas fa-chart-line text-primary me-2"></i>
+                        Grafik Prediksi Produksi
+                    </div>
+
+                    <div class="result-description">
+                        Perbandingan data historis dengan hasil prediksi
+                        produksi menggunakan algoritma Prophet.
+                    </div>
+
+
+                    <div class="chart-container">
+
+                        <canvas id="grafikProphet"></canvas>
+
+                    </div>
+
+
+                    <div class="prediction-info">
+
+                        <i class="fas fa-circle-info text-primary me-2"></i>
+
+                        Garis <strong>Data Aktual</strong> menunjukkan
+                        data historis produksi, sedangkan garis
+                        <strong>Prediksi Prophet</strong> menunjukkan
+                        hasil pemodelan dan prediksi produksi.
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- TABEL -->
+            <div class="col-xl-5 col-lg-5">
+
+                <div class="result-card">
+
+                    <div class="result-title">
+
+                        <i class="fas fa-table text-primary me-2"></i>
+
+                        Hasil Prediksi Produksi
+
+                    </div>
+
+
+                    <div class="result-description">
+
+                        Hasil prediksi produksi untuk
+                        {{ tahun_terpilih }} tahun mendatang.
+
+                    </div>
+
+
+                    <div class="table-responsive">
+
+                        <table
+                            class="table table-bordered table-hover text-center prediction-table"
+                        >
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>
+                                        Tahun
+                                    </th>
+
+                                    <th>
+                                        Prediksi
+                                    </th>
+
+                                    <th>
+                                        Batas Bawah
+                                    </th>
+
+                                    <th>
+                                        Batas Atas
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody>
+
+                                {% for row in hasil %}
+
+                                <tr>
+
+                                    <td>
+                                        {{ row.tahun }}
+                                    </td>
+
+
+                                    <td class="prediction-number">
+
+                                        {{ "{:,.2f}".format(row.yhat) }}
+
+                                    </td>
+
+
+                                    <td>
+
+                                        {{ "{:,.2f}".format(row.yhat_lower) }}
+
+                                    </td>
+
+
+                                    <td>
+
+                                        {{ "{:,.2f}".format(row.yhat_upper) }}
+
+                                    </td>
+
+                                </tr>
+
+                                {% endfor %}
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+
+                    <div class="prediction-info">
+
+                        <i class="fas fa-circle-info text-primary me-2"></i>
+
+                        Nilai prediksi ditampilkan dalam satuan
+                        <strong>Ton</strong>.
+                        Batas bawah dan batas atas menunjukkan
+                        interval ketidakpastian hasil prediksi Prophet.
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        {% endif %}
+
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================
+     BOOTSTRAP
+===================================== -->
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js">
+</script>
+
+
+
+<!-- =====================================
+     MOBILE SIDEBAR
+===================================== -->
+
+<script>
+
+    function toggleSidebar() {
+
+        document
+            .getElementById('sidebar')
+            .classList
+            .toggle('show');
+
+    }
+
+</script>
+
+
+
+<!-- =====================================
+     CHART PROPHET
+===================================== -->
+
+{% if chart_data %}
+
+<script>
+
+    const chartData =
+        {{ chart_data | tojson }};
+
+
+    const ctx =
+        document
+        .getElementById('grafikProphet')
+        .getContext('2d');
+
+
+    new Chart(ctx, {
+
+        type: 'line',
+
+        data: {
+
+            labels: chartData.labels,
+
+            datasets: [
+
+                {
+                    label: 'Data Aktual',
+
+                    data: chartData.actual,
+
+                    borderColor: '#2563eb',
+
+                    backgroundColor: '#2563eb',
+
+                    borderWidth: 2,
+
+                    pointRadius: 4,
+
+                    pointHoverRadius: 6,
+
+                    tension: 0.1,
+
+                    spanGaps: true
+                },
+
+
+                {
+                    label: 'Prediksi Prophet',
+
+                    data: chartData.pred,
+
+                    borderColor: '#16a34a',
+
+                    backgroundColor: '#16a34a',
+
+                    borderWidth: 2,
+
+                    borderDash: [5,5],
+
+                    pointRadius: 4,
+
+                    pointHoverRadius: 6,
+
+                    tension: 0.1,
+
+                    spanGaps: true
+                }
+
+            ]
+
+        },
+
+
+        options: {
+
+            responsive: true,
+
+            maintainAspectRatio: false,
+
+
+            interaction: {
+
+                mode: 'index',
+
+                intersect: false
+
+            },
+
+
+            plugins: {
+
+                legend: {
+
+                    display: true,
+
+                    position: 'top',
+
+                    labels: {
+
+                        usePointStyle: true,
+
+                        padding: 20,
+
+                        font: {
+                            size: 11
+                        }
+
+                    }
+
+                },
+
+
+                tooltip: {
+
+                    mode: 'index',
+
+                    intersect: false,
+
+                    callbacks: {
+
+                        label: function(context) {
+
+                            let label =
+                                context.dataset.label || '';
+
+                            if (label) {
+                                label += ': ';
+                            }
+
+                            if (context.parsed.y !== null) {
+
+                                label +=
+                                    new Intl.NumberFormat(
+                                        'id-ID',
+                                        {
+                                            minimumFractionDigits: 2,
+                                            maximumFractionDigits: 2
+                                        }
+                                    )
+                                    .format(context.parsed.y)
+                                    + ' Ton';
+
+                            }
+
+                            return label;
+
+                        }
+
+                    }
+
+                }
+
+            },
+
+
+            scales: {
+
+                x: {
+
+                    grid: {
+                        display: false
+                    },
+
+                    title: {
+                        display: true,
+                        text: 'Tahun'
+                    }
+
+                },
+
+
+                y: {
+
+                    beginAtZero: false,
+
+                    grid: {
+                        color: '#f1f5f9'
+                    },
+
+                    title: {
+                        display: true,
+                        text: 'Produksi (Ton)'
+                    },
+
+                    ticks: {
+
+                        callback: function(value) {
+
+                            return new Intl.NumberFormat(
+                                'id-ID'
+                            ).format(value);
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    });
+
+</script>
+
+{% endif %}
+
+
+</body>
+</html>

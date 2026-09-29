@@ -1,0 +1,1565 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Sistem Prediksi Komoditas Perkebunan di Kabupaten Langkat</title>
+
+    <!-- Bootstrap 5 -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <!-- FontAwesome -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    >
+
+    <!-- Google Font -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: #f4f6f9;
+            color: #1f2937;
+        }
+
+
+        /* ==============================
+           SIDEBAR
+        ============================== */
+
+        .sidebar {
+            width: 260px;
+            height: 100vh;
+            background: #0B192C;
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+            box-shadow: 3px 0 15px rgba(0,0,0,0.08);
+        }
+
+
+        .sidebar-brand {
+            padding: 25px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+
+
+        .brand-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+
+.brand-logo {
+    width: 70px;
+    height: 70px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+        .brand-title {
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 700;
+            line-height: 1.4;
+        }
+
+
+        .brand-subtitle {
+            color: #94a3b8;
+            font-size: 12px;
+            margin-top: 2px;
+        }
+
+
+        /* MENU */
+
+        .sidebar-menu {
+            padding: 22px 14px;
+            flex: 1;
+        }
+
+
+        .menu-title {
+            color: #64748b;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 0 12px;
+            margin-bottom: 10px;
+        }
+
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            color: #cbd5e1;
+            text-decoration: none;
+            padding: 12px 14px;
+            border-radius: 10px;
+            margin-bottom: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+
+
+        .sidebar-link i {
+            width: 20px;
+            text-align: center;
+            font-size: 16px;
+        }
+
+
+        .sidebar-link:hover {
+            color: #ffffff;
+            background: rgba(255,255,255,0.08);
+        }
+
+
+        .sidebar-link.active {
+            background: #2563eb;
+            color: #ffffff;
+        }
+
+
+        /* USER AREA */
+
+        .sidebar-user {
+            border-top: 1px solid rgba(255,255,255,0.08);
+            padding: 18px;
+        }
+
+
+        .user-box {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            margin-bottom: 12px;
+        }
+
+
+        .user-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: #1e40af;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+
+        .user-name {
+            color: white;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+
+        .user-role {
+            color: #94a3b8;
+            font-size: 11px;
+            text-transform: capitalize;
+        }
+
+
+        .logout-btn {
+            display: block;
+            width: 100%;
+            text-decoration: none;
+            color: #fecaca;
+            border: 1px solid rgba(239,68,68,0.25);
+            padding: 9px;
+            text-align: center;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+
+        .logout-btn:hover {
+            background: #dc2626;
+            color: white;
+        }
+
+
+
+        /* ==============================
+           MAIN CONTENT
+        ============================== */
+
+        .main-content {
+            margin-left: 260px;
+            min-height: 100vh;
+        }
+
+
+        .top-header {
+            height: 70px;
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            position: sticky;
+            top: 0;
+            z-index: 900;
+        }
+
+
+        .page-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin: 0;
+            color: #111827;
+        }
+
+
+        .page-subtitle {
+            font-size: 12px;
+            color: #64748b;
+            margin: 2px 0 0;
+        }
+
+
+        .header-user {
+            font-size: 13px;
+            color: #475569;
+        }
+
+
+        .content-area {
+            padding: 28px;
+        }
+
+
+
+        /* ==============================
+           HERO
+        ============================== */
+
+        .hero-banner {
+            background: linear-gradient(
+                135deg,
+                #091322 0%,
+                #0F2848 100%
+            );
+
+            border-radius: 20px;
+            padding: 42px 38px;
+            color: white;
+            overflow: hidden;
+
+            box-shadow:
+                0 10px 30px rgba(0,0,0,0.12);
+
+            margin-bottom: 28px;
+        }
+
+
+        .welcome-badge {
+            background: #2563eb;
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 18px;
+        }
+
+
+        .hero-title {
+            font-size: 2.1rem;
+            font-weight: 700;
+            line-height: 1.3;
+            margin-bottom: 16px;
+        }
+
+
+        .hero-desc {
+            color: #cbd5e1;
+            max-width: 550px;
+            font-size: 14px;
+            line-height: 1.7;
+            margin-bottom: 26px;
+        }
+
+
+        .btn-primary-custom {
+            background: #2563eb;
+            color: white;
+            padding: 11px 20px;
+            border-radius: 9px;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            border: none;
+        }
+
+
+        .btn-primary-custom:hover {
+            background: #1d4ed8;
+            color: white;
+        }
+
+
+        .btn-outline-custom {
+            border: 1px solid rgba(255,255,255,0.35);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 9px;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+
+        .btn-outline-custom:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+
+
+
+        /* ==============================
+           CHART MOCKUP
+        ============================== */
+
+        .chart-mockup-wrapper {
+            background: white;
+            border-radius: 14px;
+            padding: 15px;
+            border: 7px solid #1e293b;
+
+            box-shadow:
+                0 15px 35px rgba(0,0,0,0.25);
+        }
+
+
+
+        /* ==============================
+           FEATURE CARDS
+        ============================== */
+
+        .feature-card {
+            background: white;
+            border-radius: 15px;
+            padding: 22px;
+
+            border: 1px solid #f1f5f9;
+
+            box-shadow:
+                0 4px 15px rgba(0,0,0,0.04);
+
+            height: 100%;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+
+            transition: .2s;
+        }
+
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow:
+                0 8px 25px rgba(0,0,0,0.08);
+        }
+
+
+        .icon-box {
+            width: 52px;
+            height: 52px;
+            border-radius: 12px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 21px;
+
+            margin-bottom: 15px;
+        }
+
+
+        .icon-blue {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+
+
+        .icon-green {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+
+        .icon-purple {
+            background: #f3e8ff;
+            color: #9333ea;
+        }
+
+
+        .icon-orange {
+            background: #ffedd5;
+            color: #ea580c;
+        }
+
+
+        .card-item-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 7px;
+        }
+
+
+        .card-item-desc {
+            color: #64748b;
+            font-size: 12px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+
+        .card-action-link {
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+
+        .link-blue {
+            color: #2563eb;
+        }
+
+
+        .link-green {
+            color: #16a34a;
+        }
+
+
+        .link-purple {
+            color: #9333ea;
+        }
+
+
+        .link-orange {
+            color: #ea580c;
+        }
+
+
+
+        /* ==============================
+           RESPONSIVE
+        ============================== */
+
+        .mobile-menu-button {
+            display: none;
+        }
+
+
+        @media(max-width: 992px) {
+
+            .sidebar {
+                transform: translateX(-100%);
+                transition: .3s;
+            }
+
+
+            .sidebar.show {
+                transform: translateX(0);
+            }
+
+
+            .main-content {
+                margin-left: 0;
+            }
+
+
+            .mobile-menu-button {
+                display: inline-block;
+            }
+
+
+            .content-area {
+                padding: 18px;
+            }
+
+
+            .hero-title {
+                font-size: 1.6rem;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ==========================================
+     SIDEBAR
+=========================================== -->
+
+<div class="sidebar" id="sidebar">
+
+
+    <!-- BRAND -->
+    <div class="sidebar-brand">
+
+        <div class="brand-wrapper">
+
+           <img
+    src="{{ url_for('static', filename='images/logo.png') }}"
+    alt="Logo Prediksi Langkat"
+    class="brand-logo"
+>
+
+
+            <div>
+
+                <div class="brand-title">
+                    Sistem Prediksi<br>
+                    Komoditas Perkebunan
+                </div>
+
+                <div class="brand-subtitle">
+                    Kabupaten Langkat
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- MENU -->
+    <div class="sidebar-menu">
+
+        <div class="menu-title">
+            Menu Utama
+        </div>
+
+
+        <!-- BERANDA -->
+        <a
+            href="{{ url_for('dashboard') }}"
+            class="sidebar-link active"
+        >
+
+            <i class="fas fa-home"></i>
+
+            <span>
+                Beranda
+            </span>
+
+        </a>
+
+
+
+        <!-- DATA PRODUKSI -->
+        <a
+            href="{{ url_for('data') }}"
+            class="sidebar-link"
+        >
+
+            <i class="fas fa-database"></i>
+
+            <span>
+                Data Produksi
+            </span>
+
+        </a>
+
+
+
+        <!-- PREDIKSI -->
+        <a
+            href="{{ url_for('prediksi') }}"
+            class="sidebar-link"
+        >
+
+            <i class="fas fa-chart-line"></i>
+
+            <span>
+                Prediksi
+            </span>
+
+        </a>
+
+
+        <!-- EVALUASI -->
+        <a
+            href="{{ url_for('evaluasi') }}"
+            class="sidebar-link"
+        >
+
+            <i class="fas fa-chart-bar"></i>
+
+            <span>
+                Evaluasi
+            </span>
+
+        </a>
+
+
+
+        <!-- KHUSUS ADMIN -->
+        {% if session.get('role') == 'admin' %}
+
+        <a
+            href="{{ url_for('kelola_pengguna') }}"
+            class="sidebar-link"
+        >
+
+            <i class="fas fa-users-cog"></i>
+
+            <span>
+                Kelola Pengguna
+            </span>
+
+        </a>
+
+        {% endif %}
+
+
+
+        <!-- TENTANG -->
+        <a
+            href="{{ url_for('tentang') }}"
+            class="sidebar-link"
+        >
+
+            <i class="fas fa-circle-info"></i>
+
+            <span>
+                Tentang
+            </span>
+
+        </a>
+
+    </div>
+
+
+
+    <!-- USER -->
+    <div class="sidebar-user">
+
+        <div class="user-box">
+
+            <div class="user-avatar">
+
+                <i class="fas fa-user"></i>
+
+            </div>
+
+
+            <div>
+
+                <div class="user-name">
+
+                    {{ session.get(
+                        'nama_user',
+                        session.get(
+                            'username',
+                            'Pengguna'
+                        )
+                    ) }}
+
+                </div>
+
+
+                <div class="user-role">
+
+                    {% if session.get('role') == 'admin' %}
+
+                        Administrator
+
+                    {% else %}
+
+                        Pengguna
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <a
+            href="{{ url_for('logout') }}"
+            class="logout-btn"
+        >
+
+            <i class="fas fa-right-from-bracket me-1"></i>
+
+            Logout
+
+        </a>
+
+    </div>
+
+
+</div>
+
+
+
+
+<!-- ==========================================
+     MAIN CONTENT
+=========================================== -->
+
+<div class="main-content">
+
+
+    <!-- TOP HEADER -->
+    <div class="top-header">
+
+        <div class="d-flex align-items-center gap-3">
+
+
+            <!-- TOMBOL MOBILE -->
+            <button
+                class="btn btn-outline-secondary mobile-menu-button"
+                onclick="toggleSidebar()"
+            >
+
+                <i class="fas fa-bars"></i>
+
+            </button>
+
+
+            <div>
+
+                <h5 class="page-title">
+                    Dashboard
+                </h5>
+
+                <p class="page-subtitle">
+                    Sistem Prediksi Produksi Komoditas Perkebunan Kabupaten Langkat
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="dropdown">
+
+            <button
+                class="btn btn-link text-decoration-none text-muted dropdown-toggle p-0 header-user"
+                type="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+            >
+
+                <i class="fas fa-user-circle me-1"></i>
+
+                {{ session.get(
+                    'nama_user',
+                    session.get(
+                        'username',
+                        'Pengguna'
+                    )
+                ) }}
+
+            </button>
+
+            <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+
+                <li>
+                    <a
+                        class="dropdown-item text-danger"
+                        href="{{ url_for('logout') }}"
+                    >
+                        <i class="fas fa-right-from-bracket me-2"></i>
+                        Logout
+                    </a>
+                </li>
+
+            </ul>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- CONTENT -->
+    <div class="content-area">
+
+
+        <!-- =================================
+             HERO
+        ================================== -->
+
+        <div class="hero-banner">
+
+
+            <div class="row align-items-center">
+
+
+                <!-- TEXT -->
+                <div class="col-lg-6 mb-4 mb-lg-0">
+
+
+                    <div class="welcome-badge">
+
+                        Selamat Datang 👋
+
+                    </div>
+
+
+                    <h1 class="hero-title">
+
+                        Sistem Prediksi Komoditas
+                        Perkebunan di Kabupaten Langkat
+
+                    </h1>
+
+
+                    <p class="hero-desc">
+
+                        Sistem ini digunakan untuk memprediksi
+                        produksi komoditas perkebunan berdasarkan
+                        data historis menggunakan algoritma Prophet.
+
+                        Hasil prediksi disajikan dalam bentuk
+                        tabel, grafik, dan nilai evaluasi model.
+
+                    </p>
+
+
+
+                    <div class="d-flex flex-wrap gap-3">
+
+
+                        <!-- ADMIN -->
+                        {% if session.get('role') == 'admin' %}
+
+                        <a
+                            href="{{ url_for('data') }}"
+                            class="btn-primary-custom"
+                        >
+
+                            <i class="fas fa-database me-2"></i>
+
+                            Kelola Data Produksi
+
+                        </a>
+
+
+                        <!-- USER -->
+                        {% else %}
+
+                        <a
+                            href="{{ url_for('data') }}"
+                            class="btn-primary-custom"
+                        >
+
+                            <i class="fas fa-database me-2"></i>
+
+                            Lihat Data Produksi
+
+                        </a>
+
+                        {% endif %}
+
+
+
+                        <a
+                            href="{{ url_for('prediksi') }}"
+                            class="btn-outline-custom"
+                        >
+
+                            <i class="fas fa-chart-line me-2"></i>
+
+                            Lihat Prediksi
+
+                        </a>
+
+
+                    </div>
+
+
+                </div>
+
+
+
+
+                <!-- CHART -->
+                <div class="col-lg-6">
+
+
+                    <div
+                        class="chart-mockup-wrapper mx-auto"
+                        style="max-width:500px;"
+                    >
+
+
+                        <div
+                            class="d-flex
+                                   justify-content-between
+                                   align-items-center
+                                   mb-2 px-2"
+                        >
+
+
+                            <span
+                                class="fw-bold text-dark"
+                                style="font-size:12px;"
+                            >
+
+                                Prediksi Produksi (Ton)
+
+                            </span>
+
+
+                            <div style="font-size:10px;">
+
+                                <span class="text-primary me-2">
+
+                                    <i class="fas fa-minus"></i>
+                                    Data Aktual
+
+                                </span>
+
+
+                                <span class="text-success">
+
+                                    <i class="fas fa-minus"></i>
+                                    Prediksi
+
+                                </span>
+
+                            </div>
+
+
+                        </div>
+
+
+
+                        <!-- SVG GRAFIK -->
+                        <svg
+                            viewBox="0 0 500 250"
+                            class="w-100 h-auto"
+                        >
+
+
+                            <!-- GRID -->
+
+                            <line
+                                x1="40"
+                                y1="30"
+                                x2="480"
+                                y2="30"
+                                stroke="#f1f5f9"
+                            />
+
+
+                            <line
+                                x1="40"
+                                y1="80"
+                                x2="480"
+                                y2="80"
+                                stroke="#f1f5f9"
+                            />
+
+
+                            <line
+                                x1="40"
+                                y1="130"
+                                x2="480"
+                                y2="130"
+                                stroke="#f1f5f9"
+                            />
+
+
+                            <line
+                                x1="40"
+                                y1="180"
+                                x2="480"
+                                y2="180"
+                                stroke="#f1f5f9"
+                            />
+
+
+                            <line
+                                x1="40"
+                                y1="220"
+                                x2="480"
+                                y2="220"
+                                stroke="#e2e8f0"
+                            />
+
+
+
+                            <!-- Y LABEL -->
+
+                            <text
+                                x="5"
+                                y="35"
+                                fill="#94a3b8"
+                                font-size="10"
+                            >
+                                120K
+                            </text>
+
+
+                            <text
+                                x="8"
+                                y="85"
+                                fill="#94a3b8"
+                                font-size="10"
+                            >
+                                90K
+                            </text>
+
+
+                            <text
+                                x="8"
+                                y="135"
+                                fill="#94a3b8"
+                                font-size="10"
+                            >
+                                60K
+                            </text>
+
+
+                            <text
+                                x="8"
+                                y="185"
+                                fill="#94a3b8"
+                                font-size="10"
+                            >
+                                30K
+                            </text>
+
+
+                            <text
+                                x="25"
+                                y="223"
+                                fill="#94a3b8"
+                                font-size="10"
+                            >
+                                0
+                            </text>
+
+
+
+                            <!-- X LABEL -->
+
+                            <text
+                                x="40"
+                                y="240"
+                                fill="#64748b"
+                                font-size="10"
+                            >
+                                2015
+                            </text>
+
+
+                            <text
+                                x="115"
+                                y="240"
+                                fill="#64748b"
+                                font-size="10"
+                            >
+                                2017
+                            </text>
+
+
+                            <text
+                                x="190"
+                                y="240"
+                                fill="#64748b"
+                                font-size="10"
+                            >
+                                2019
+                            </text>
+
+
+                            <text
+                                x="265"
+                                y="240"
+                                fill="#64748b"
+                                font-size="10"
+                            >
+                                2021
+                            </text>
+
+
+                            <text
+                                x="340"
+                                y="240"
+                                fill="#64748b"
+                                font-size="10"
+                            >
+                                2023
+                            </text>
+
+
+                            <text
+                                x="410"
+                                y="240"
+                                fill="#64748b"
+                                font-size="10"
+                            >
+                                2025
+                            </text>
+
+
+
+                            <!-- INTERVAL -->
+
+                            <polygon
+                                points="
+                                330,145
+                                380,125
+                                430,100
+                                470,110
+                                470,145
+                                430,135
+                                380,150
+                                330,155
+                                "
+                                fill="#dcfce7"
+                                opacity="0.7"
+                            />
+
+
+
+                            <!-- ACTUAL -->
+
+                            <path
+                                d="
+                                M 40,190
+                                L 80,150
+                                L 120,165
+                                L 160,155
+                                L 200,140
+                                L 240,160
+                                L 280,150
+                                L 320,135
+                                L 350,145
+                                "
+                                fill="none"
+                                stroke="#2563eb"
+                                stroke-width="3"
+                                stroke-linecap="round"
+                            />
+
+
+
+                            <!-- PREDICTION -->
+
+                            <path
+                                d="
+                                M 350,145
+                                L 390,130
+                                L 430,110
+                                L 470,120
+                                "
+                                fill="none"
+                                stroke="#16a34a"
+                                stroke-width="3"
+                                stroke-dasharray="6,5"
+                                stroke-linecap="round"
+                            />
+
+
+                        </svg>
+
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+
+
+        <!-- =================================
+             FEATURE CARDS
+        ================================== -->
+
+        <div class="row g-4">
+
+
+            <!-- DATA PRODUKSI -->
+            <div class="col-xl-3 col-md-6">
+
+
+                <div class="feature-card">
+
+
+                    <div>
+
+
+                        <div class="icon-box icon-blue">
+
+                            <i class="fas fa-database"></i>
+
+                        </div>
+
+
+                        <div class="card-item-title">
+
+                            Data Produksi
+
+                        </div>
+
+
+                        <div class="card-item-desc">
+
+                            {% if session.get('role') == 'admin' %}
+
+                                Kelola data historis produksi
+                                komoditas perkebunan.
+
+                            {% else %}
+
+                                Lihat data historis produksi
+                                komoditas perkebunan.
+
+                            {% endif %}
+
+                        </div>
+
+
+                    </div>
+
+
+                    <a
+                        href="{{ url_for('data') }}"
+                        class="card-action-link link-blue"
+                    >
+
+                        {% if session.get('role') == 'admin' %}
+
+                            Kelola Data
+
+                        {% else %}
+
+                            Lihat Data
+
+                        {% endif %}
+
+                        <i class="fas fa-arrow-right ms-1"></i>
+
+                    </a>
+
+
+                </div>
+
+
+            </div>
+
+
+
+
+            <!-- PREDIKSI -->
+            <div class="col-xl-3 col-md-6">
+
+
+                <div class="feature-card">
+
+
+                    <div>
+
+
+                        <div class="icon-box icon-green">
+
+                            <i class="fas fa-chart-line"></i>
+
+                        </div>
+
+
+                        <div class="card-item-title">
+
+                            Prediksi
+
+                        </div>
+
+
+                        <div class="card-item-desc">
+
+                            Lakukan prediksi produksi
+                            komoditas menggunakan algoritma Prophet.
+
+                        </div>
+
+
+                    </div>
+
+
+                    <a
+                        href="{{ url_for('prediksi') }}"
+                        class="card-action-link link-green"
+                    >
+
+                        Jalankan Prediksi
+
+                        <i class="fas fa-arrow-right ms-1"></i>
+
+                    </a>
+
+
+                </div>
+
+
+            </div>
+
+
+
+
+            <!-- VISUALISASI -->
+            <div class="col-xl-3 col-md-6">
+
+
+                <div class="feature-card">
+
+
+                    <div>
+
+
+                        <div class="icon-box icon-purple">
+
+                            <i class="fas fa-chart-column"></i>
+
+                        </div>
+
+
+                        <div class="card-item-title">
+
+                            Visualisasi
+
+                        </div>
+
+
+                        <div class="card-item-desc">
+
+                            Lihat perbandingan data aktual
+                            dan hasil prediksi dalam bentuk grafik.
+
+                        </div>
+
+
+                    </div>
+
+
+                    <a
+                        href="{{ url_for('prediksi') }}"
+                        class="card-action-link link-purple"
+                    >
+
+                        Lihat Grafik
+
+                        <i class="fas fa-arrow-right ms-1"></i>
+
+                    </a>
+
+
+                </div>
+
+
+            </div>
+
+
+
+
+            <!-- CARD KE-4 -->
+
+            {% if session.get('role') == 'admin' %}
+
+
+            <!-- ADMIN = KELOLA PENGGUNA -->
+
+            <div class="col-xl-3 col-md-6">
+
+
+                <div class="feature-card">
+
+
+                    <div>
+
+
+                        <div class="icon-box icon-orange">
+
+                            <i class="fas fa-users-cog"></i>
+
+                        </div>
+
+
+                        <div class="card-item-title">
+
+                            Kelola Pengguna
+
+                        </div>
+
+
+                        <div class="card-item-desc">
+
+                            Daftarkan, edit, dan hapus
+                            akun pengguna yang dapat
+                            mengakses sistem.
+
+                        </div>
+
+
+                    </div>
+
+
+                    <a
+                        href="{{ url_for('kelola_pengguna') }}"
+                        class="card-action-link link-orange"
+                    >
+
+                        Kelola Pengguna
+
+                        <i class="fas fa-arrow-right ms-1"></i>
+
+                    </a>
+
+
+                </div>
+
+
+            </div>
+
+
+            {% else %}
+
+
+            <!-- USER = EVALUASI -->
+
+            <div class="col-xl-3 col-md-6">
+
+
+                <div class="feature-card">
+
+
+                    <div>
+
+
+                        <div class="icon-box icon-orange">
+
+                            <i class="fas fa-square-poll-vertical"></i>
+
+                        </div>
+
+
+                        <div class="card-item-title">
+
+                            Evaluasi Model
+
+                        </div>
+
+
+                        <div class="card-item-desc">
+
+                            Lihat hasil evaluasi model
+                            menggunakan MAE, MAPE,
+                            RMSE, dan R².
+
+                        </div>
+
+
+                    </div>
+
+
+                    <a
+                        href="{{ url_for('evaluasi') }}"
+                        class="card-action-link link-orange"
+                    >
+
+                        Lihat Evaluasi
+
+                        <i class="fas fa-arrow-right ms-1"></i>
+
+                    </a>
+
+
+                </div>
+
+
+            </div>
+
+
+            {% endif %}
+
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+
+
+<!-- BOOTSTRAP -->
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js">
+</script>
+
+
+<script>
+
+    function toggleSidebar() {
+
+        document
+            .getElementById('sidebar')
+            .classList
+            .toggle('show');
+
+    }
+
+</script>
+
+
+</body>
+</html>

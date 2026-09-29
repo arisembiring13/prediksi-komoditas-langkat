@@ -1,0 +1,1780 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Data Komoditas Langkat</title>
+
+    <!-- AdminLTE & FontAwesome CSS -->
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='dist/css/adminlte.min.css') }}">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='plugins/fontawesome-free/css/all.min.css') }}">
+
+    <!-- Google Font -->
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+
+    <style>
+
+        body {
+            background-color: #f4f6f9;
+        }
+
+        .card-custom-stat {
+            border-radius: 10px;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            height: 100%;
+        }
+
+        .stat-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .upload-box {
+            border: 2px dashed #cbd5e1;
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            background-color: #f8fafc;
+        }
+
+        .upload-icon {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            background-color: #dcfce7;
+            color: #16a34a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin: 0 auto 15px;
+        }
+
+        .format-example {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 12px;
+        }
+
+        .btn-excel {
+            background-color: #198754;
+            border-color: #198754;
+            color: white;
+        }
+
+        .btn-excel:hover {
+            background-color: #157347;
+            border-color: #146c43;
+            color: white;
+        }
+
+        .alert-custom {
+            border-radius: 10px;
+        }
+
+    </style>
+</head>
+
+
+<body class="hold-transition sidebar-mini layout-fixed p-4 bg-light">
+
+
+<div class="container-fluid">
+
+
+    <!-- =========================================================
+         HEADER
+    ========================================================== -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="m-0 font-weight-bold text-dark">
+                Data Produksi Komoditas
+            </h2>
+
+            <p class="text-muted m-0 small">
+
+                {% if session.get('role') == 'admin' %}
+
+                    Kelola, input, import Excel, dan lihat data historis
+                    produksi perkebunan Kabupaten Langkat.
+
+                {% else %}
+
+                    Lihat data historis produksi perkebunan
+                    Kabupaten Langkat.
+
+                {% endif %}
+
+            </p>
+
+        </div>
+
+
+        <div class="d-flex flex-wrap">
+
+
+            {% if session.get('role') == 'admin' %}
+
+
+            <!-- TOMBOL INPUT MANUAL -->
+            <button
+                class="btn btn-primary rounded-pill px-3 shadow-sm mr-2 mb-2"
+                type="button"
+                data-toggle="collapse"
+                data-target="#formInputSection"
+            >
+
+                <i class="fas fa-plus mr-1"></i>
+
+                Input Manual
+
+            </button>
+
+
+            <!-- TOMBOL UPLOAD EXCEL -->
+            <button
+                class="btn btn-excel rounded-pill px-3 shadow-sm mr-2 mb-2"
+                type="button"
+                data-toggle="modal"
+                data-target="#modalUploadExcel"
+            >
+
+                <i class="fas fa-file-excel mr-1"></i>
+
+                Upload Excel
+
+            </button>
+
+
+            {% endif %}
+
+
+            <!-- KEMBALI -->
+            <a
+                href="{{ url_for('dashboard') }}"
+                class="btn btn-outline-secondary rounded-pill px-3 shadow-sm mb-2"
+            >
+
+                <i class="fas fa-arrow-left mr-1"></i>
+
+                Kembali ke Dashboard
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =========================================================
+         PESAN SUKSES / ERROR
+    ========================================================== -->
+
+
+    {% if sukses %}
+
+    <div class="alert alert-success alert-dismissible fade show alert-custom shadow-sm">
+
+        <i class="fas fa-check-circle mr-2"></i>
+
+        <strong>Berhasil!</strong>
+
+        {{ sukses }}
+
+        <button
+            type="button"
+            class="close"
+            data-dismiss="alert"
+            aria-label="Close"
+        >
+            <span aria-hidden="true">&times;</span>
+        </button>
+
+    </div>
+
+    {% endif %}
+
+
+
+    {% if error %}
+
+    <div class="alert alert-danger alert-dismissible fade show alert-custom shadow-sm">
+
+        <i class="fas fa-exclamation-circle mr-2"></i>
+
+        <strong>Gagal!</strong>
+
+        {{ error }}
+
+        <button
+            type="button"
+            class="close"
+            data-dismiss="alert"
+            aria-label="Close"
+        >
+            <span aria-hidden="true">&times;</span>
+        </button>
+
+    </div>
+
+    {% endif %}
+
+
+
+
+    <!-- =========================================================
+         FORM INPUT DATA MANUAL
+         KHUSUS ADMIN
+    ========================================================== -->
+
+
+    {% if session.get('role') == 'admin' %}
+
+
+    <div
+        class="collapse mb-4"
+        id="formInputSection"
+    >
+
+
+        <div class="card card-primary card-outline shadow-sm">
+
+
+            <div class="card-header bg-white">
+
+
+                <h3 class="card-title font-weight-bold text-primary m-0">
+
+                    <i class="fas fa-edit mr-2"></i>
+
+                    Form Tambah Data Produksi Manual
+
+                </h3>
+
+
+            </div>
+
+
+            <div class="card-body">
+
+
+                <form
+                    action="{{ url_for('data') }}"
+                    method="POST"
+                >
+
+
+                    <div class="row">
+
+
+                        <!-- KOMODITAS -->
+
+                        <div class="col-md-3 mb-3">
+
+
+                            <label class="font-weight-bold small text-secondary">
+
+                                Komoditas
+
+                            </label>
+
+
+                            <select
+                                id="select-komoditas"
+                                class="form-control"
+                                name="komoditas"
+                                onchange="handleKomoditasChange(this)"
+                                required
+                            >
+
+                                <option
+                                    value=""
+                                    disabled
+                                    selected
+                                >
+                                    -- Pilih Komoditas --
+                                </option>
+
+
+                                <option value="Kelapa Sawit">
+                                    Kelapa Sawit
+                                </option>
+
+                                <option value="Kakao">
+                                    Kakao
+                                </option>
+
+                                <option value="Karet">
+                                    Karet
+                                </option>
+
+                                <option value="Kopi">
+                                    Kopi
+                                </option>
+
+                                <option value="Kelapa Dalam">
+                                    Kelapa Dalam
+                                </option>
+
+                                <option value="Pinang">
+                                    Pinang
+                                </option>
+
+
+                                <option
+                                    value="__LAINNYA__"
+                                    class="font-weight-bold text-primary"
+                                >
+                                    + Tambah Komoditas Baru...
+                                </option>
+
+
+                            </select>
+
+
+
+                            <!-- KOMODITAS BARU -->
+
+                            <div
+                                id="container-komoditas-baru"
+                                class="mt-2 d-none"
+                            >
+
+
+                                <div class="input-group input-group-sm">
+
+
+                                    <input
+                                        type="text"
+                                        id="input-komoditas-baru"
+                                        class="form-control"
+                                        placeholder="Ketik nama komoditas..."
+                                    >
+
+
+                                    <div class="input-group-append">
+
+
+                                        <button
+                                            type="button"
+                                            class="btn btn-outline-secondary"
+                                            onclick="batalTambahBaru()"
+                                            title="Batal"
+                                        >
+
+                                            <i class="fas fa-times"></i>
+
+                                        </button>
+
+
+                                    </div>
+
+
+                                </div>
+
+
+                                <small class="text-info mt-1 d-block">
+
+                                    <i class="fas fa-info-circle mr-1"></i>
+
+                                    Ketik nama komoditas baru di atas.
+
+                                </small>
+
+
+                            </div>
+
+
+                        </div>
+
+
+
+                        <!-- TAHUN -->
+
+                        <div class="col-md-3 mb-3">
+
+
+                            <label class="font-weight-bold small text-secondary">
+
+                                Tahun
+
+                            </label>
+
+
+                            <select
+                                class="form-control"
+                                name="tahun"
+                                required
+                            >
+
+
+                                {% for y in range(2026, 2000, -1) %}
+
+                                <option value="{{ y }}">
+
+                                    {{ y }}
+
+                                </option>
+
+                                {% endfor %}
+
+
+                            </select>
+
+
+                        </div>
+
+
+
+                        <!-- PRODUKSI -->
+
+                        <div class="col-md-3 mb-3">
+
+
+                            <label class="font-weight-bold small text-secondary">
+
+                                Jumlah Produksi
+
+                            </label>
+
+
+                            <div class="input-group">
+
+
+                                <input
+                                    type="number"
+                                    step="any"
+                                    class="form-control"
+                                    name="produksi"
+                                    placeholder="0.00"
+                                    required
+                                >
+
+
+                                <div class="input-group-append">
+
+                                    <span class="input-group-text">
+
+                                        Ton
+
+                                    </span>
+
+                                </div>
+
+
+                            </div>
+
+
+                        </div>
+
+
+
+                        <!-- KETERANGAN -->
+
+                        <div class="col-md-3 mb-3">
+
+
+                            <label class="font-weight-bold small text-secondary">
+
+                                Keterangan (Opsional)
+
+                            </label>
+
+
+                            <input
+                                type="text"
+                                class="form-control"
+                                name="keterangan"
+                                placeholder="-"
+                            >
+
+
+                        </div>
+
+
+                    </div>
+
+
+
+                    <div class="d-flex justify-content-end mt-2">
+
+
+                        <button
+                            type="reset"
+                            class="btn btn-sm btn-outline-secondary px-3 mr-2"
+                            onclick="batalTambahBaru()"
+                        >
+
+                            <i class="fas fa-undo mr-1"></i>
+
+                            Reset
+
+                        </button>
+
+
+                        <button
+                            type="submit"
+                            class="btn btn-sm btn-primary px-4 font-weight-bold"
+                        >
+
+                            <i class="fas fa-save mr-1"></i>
+
+                            Simpan Data
+
+                        </button>
+
+
+                    </div>
+
+
+                </form>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+    {% endif %}
+
+
+
+
+    <!-- =========================================================
+         RINGKASAN DATA
+    ========================================================== -->
+
+
+    {% if ringkasan %}
+
+
+    <div class="row mb-4">
+
+
+        <!-- TOTAL DATA -->
+
+        <div class="col-md-3 mb-2">
+
+
+            <div class="card-custom-stat shadow-sm">
+
+
+                <div class="stat-icon bg-primary text-white">
+
+                    <i class="fas fa-database"></i>
+
+                </div>
+
+
+                <div>
+
+                    <div class="text-muted small font-weight-bold text-uppercase">
+
+                        Total Data
+
+                    </div>
+
+                    <div class="h5 font-weight-bold mb-0 text-dark">
+
+                        {{ ringkasan.total_data }}
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+
+
+        <!-- TOTAL KOMODITAS -->
+
+        <div class="col-md-3 mb-2">
+
+
+            <div class="card-custom-stat shadow-sm">
+
+
+                <div class="stat-icon bg-success text-white">
+
+                    <i class="fas fa-seedling"></i>
+
+                </div>
+
+
+                <div>
+
+                    <div class="text-muted small font-weight-bold text-uppercase">
+
+                        Total Komoditas
+
+                    </div>
+
+                    <div class="h5 font-weight-bold mb-0 text-dark">
+
+                        {{ ringkasan.total_komoditas }} Jenis
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+
+
+        <!-- RENTANG TAHUN -->
+
+        <div class="col-md-3 mb-2">
+
+
+            <div class="card-custom-stat shadow-sm">
+
+
+                <div class="stat-icon bg-warning text-white">
+
+                    <i class="fas fa-calendar-alt"></i>
+
+                </div>
+
+
+                <div>
+
+                    <div class="text-muted small font-weight-bold text-uppercase">
+
+                        Rentang Tahun
+
+                    </div>
+
+                    <div class="h5 font-weight-bold mb-0 text-dark">
+
+                        {{ ringkasan.rentang_tahun }}
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+
+
+        <!-- TOTAL PRODUKSI -->
+
+        <div class="col-md-3 mb-2">
+
+
+            <div class="card-custom-stat shadow-sm">
+
+
+                <div class="stat-icon bg-info text-white">
+
+                    <i class="fas fa-chart-line"></i>
+
+                </div>
+
+
+                <div>
+
+                    <div class="text-muted small font-weight-bold text-uppercase">
+
+                        Total Produksi
+
+                    </div>
+
+                    <div class="h5 font-weight-bold mb-0 text-dark">
+
+                        {{ ringkasan.total_produksi }}
+
+                        <small>Ton</small>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+    {% endif %}
+
+
+
+
+    <!-- =========================================================
+         TABEL DATA
+    ========================================================== -->
+
+
+    <div class="card card-primary card-outline shadow-sm">
+
+
+        <div class="card-header bg-white py-3">
+
+
+            <div class="row align-items-center">
+
+
+                <div class="col-md-6 mb-2 mb-md-0">
+
+
+                    <h3 class="card-title font-weight-bold m-0 text-primary">
+
+                        <i class="fas fa-table mr-2"></i>
+
+                        Tabel Data Produksi
+
+                    </h3>
+
+
+                </div>
+
+
+
+                <!-- FILTER -->
+
+                <div class="col-md-6 d-flex justify-content-end">
+
+
+                    <select
+                        id="selectKomoditas"
+                        class="form-control mr-2"
+                        style="max-width:220px;"
+                        onchange="filterTabel()"
+                    >
+
+                        <option value="">
+
+                            -- Semua Komoditas --
+
+                        </option>
+
+                    </select>
+
+
+
+                    <input
+                        type="text"
+                        id="inputCari"
+                        class="form-control"
+                        style="max-width:200px;"
+                        placeholder="Cari..."
+                        onkeyup="filterTabel()"
+                    >
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+
+
+        <div class="card-body p-0">
+
+
+            <div class="table-responsive">
+
+
+                <table
+                    class="table table-bordered table-striped table-hover mb-0"
+                    id="tabelData"
+                >
+
+
+                    <thead class="thead-dark">
+
+
+                    <tr>
+
+                        <th
+                            style="width:50px;"
+                            class="text-center"
+                        >
+                            No
+                        </th>
+
+                        <th
+                            style="width:70px;"
+                            class="text-center"
+                        >
+                            ID
+                        </th>
+
+                        <th
+                            style="width:100px;"
+                            class="text-center"
+                        >
+                            Tahun
+                        </th>
+
+                        <th>
+                            Komoditas
+                        </th>
+
+                        <th class="text-right">
+                            Produksi (Ton)
+                        </th>
+
+                        <th
+                            style="width:100px;"
+                            class="text-center"
+                        >
+                            Satuan
+                        </th>
+
+
+                        {% if session.get('role') == 'admin' %}
+
+                        <th
+                            style="width:140px;"
+                            class="text-center"
+                        >
+                            Aksi
+                        </th>
+
+                        {% endif %}
+
+
+                    </tr>
+
+
+                    </thead>
+
+
+
+                    <tbody>
+
+
+                    {% if data %}
+
+
+                        {% for row in data %}
+
+
+                        <tr>
+
+
+                            <td class="text-center align-middle">
+
+                                {{ loop.index }}
+
+                            </td>
+
+
+
+                            <td class="text-center align-middle text-muted small">
+
+                                {{ row.id if row.id is defined else row[0] }}
+
+                            </td>
+
+
+
+                            <td class="text-center align-middle font-weight-bold">
+
+                                {{
+                                    row.tahun
+                                    if row.tahun is defined
+                                    else
+                                    row[1]
+                                    if row[1] is number and row[1] > 1900
+                                    else row[2]
+                                }}
+
+                            </td>
+
+
+
+                            <td class="align-middle font-weight-bold text-dark">
+
+                                {{
+                                    row.komoditas
+                                    if row.komoditas is defined
+                                    else
+                                    row[3]
+                                    if row[3] is string
+                                    else row[1]
+                                }}
+
+                            </td>
+
+
+
+                            <td class="text-right align-middle font-weight-bold text-primary">
+
+
+                                {% set val_prod =
+                                    row.produksi
+                                    if row.produksi is defined
+                                    else
+                                    row[4]
+                                    if row|length > 4
+                                    else row[2]
+                                %}
+
+
+                                {{
+                                    "{:,.2f}".format(val_prod|float)
+                                    if val_prod is not none
+                                    else "0.00"
+                                }}
+
+
+                            </td>
+
+
+
+                            <td class="text-center align-middle small text-muted">
+
+                                {{
+                                    row.satuan
+                                    if row.satuan is defined
+                                    else 'Ton'
+                                }}
+
+                            </td>
+
+
+
+
+                            {% if session.get('role') == 'admin' %}
+
+
+                            <td class="text-center align-middle">
+
+
+                                {% set item_id =
+                                    row.id
+                                    if row.id is defined
+                                    else row[0]
+                                %}
+
+
+                                <a
+                                    href="{{ url_for('edit_data', id=item_id) }}"
+                                    class="btn btn-xs btn-outline-info shadow-sm px-2 mr-1"
+                                    title="Edit Data"
+                                >
+
+                                    <i class="fas fa-edit"></i>
+
+                                    Edit
+
+                                </a>
+
+
+                                <a
+                                    href="{{ url_for('hapus_data', id=item_id) }}"
+                                    onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?');"
+                                    class="btn btn-xs btn-outline-danger shadow-sm px-2"
+                                    title="Hapus Data"
+                                >
+
+                                    <i class="fas fa-trash-alt"></i>
+
+                                    Hapus
+
+                                </a>
+
+
+                            </td>
+
+
+                            {% endif %}
+
+
+                        </tr>
+
+
+                        {% endfor %}
+
+
+
+                    {% else %}
+
+
+                        <tr>
+
+
+                            <td
+                                colspan="{{ 7 if session.get('role') == 'admin' else 6 }}"
+                                class="text-center py-4 text-muted"
+                            >
+
+                                <i class="fas fa-database fa-2x mb-2 d-block"></i>
+
+                                Data produksi belum tersedia.
+
+                            </td>
+
+
+                        </tr>
+
+
+                    {% endif %}
+
+
+                    </tbody>
+
+
+                </table>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+
+
+<!-- =========================================================
+     MODAL UPLOAD EXCEL
+     KHUSUS ADMIN
+========================================================== -->
+
+
+{% if session.get('role') == 'admin' %}
+
+
+<div
+    class="modal fade"
+    id="modalUploadExcel"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="modalUploadExcelLabel"
+    aria-hidden="true"
+>
+
+
+    <div
+        class="modal-dialog modal-lg modal-dialog-centered"
+        role="document"
+    >
+
+
+        <div class="modal-content">
+
+
+            <!-- HEADER -->
+
+            <div class="modal-header bg-success text-white">
+
+
+                <h5
+                    class="modal-title font-weight-bold"
+                    id="modalUploadExcelLabel"
+                >
+
+                    <i class="fas fa-file-excel mr-2"></i>
+
+                    Import Data Produksi dari Excel
+
+                </h5>
+
+
+                <button
+                    type="button"
+                    class="close text-white"
+                    data-dismiss="modal"
+                    aria-label="Close"
+                >
+
+                    <span aria-hidden="true">
+
+                        &times;
+
+                    </span>
+
+                </button>
+
+
+            </div>
+
+
+
+            <!-- FORM -->
+
+            <form
+                action="{{ url_for('upload_excel') }}"
+                method="POST"
+                enctype="multipart/form-data"
+            >
+
+
+                <div class="modal-body">
+
+
+                    <div class="upload-box">
+
+
+                        <div class="upload-icon">
+
+                            <i class="fas fa-file-excel"></i>
+
+                        </div>
+
+
+                        <h5 class="font-weight-bold">
+
+                            Pilih File Excel
+
+                        </h5>
+
+
+                        <p class="text-muted small">
+
+                            Pilih file data produksi komoditas
+                            perkebunan dalam format Excel .xlsx
+
+                        </p>
+
+
+
+                        <div class="form-group text-left mt-4">
+
+
+                            <label class="font-weight-bold">
+
+                                File Excel
+
+                            </label>
+
+
+                            <div class="custom-file">
+
+
+                                <input
+                                    type="file"
+                                    class="custom-file-input"
+                                    id="fileExcel"
+                                    name="file_excel"
+                                    accept=".xlsx"
+                                    required
+                                    onchange="tampilkanNamaFile(this)"
+                                >
+
+
+                                <label
+                                    class="custom-file-label"
+                                    for="fileExcel"
+                                    id="labelFileExcel"
+                                >
+
+                                    Pilih file .xlsx...
+
+                                </label>
+
+
+                            </div>
+
+
+                            <small class="form-text text-muted">
+
+                                Format yang diterima:
+                                Microsoft Excel (.xlsx)
+
+                            </small>
+
+
+                        </div>
+
+
+                    </div>
+
+
+
+                    <!-- FORMAT EXCEL -->
+
+                    <div class="format-example mt-4">
+
+
+                        <h6 class="font-weight-bold text-dark">
+
+                            <i class="fas fa-info-circle text-primary mr-1"></i>
+
+                            Format Excel
+
+                        </h6>
+
+
+                        <p class="small text-muted mb-2">
+
+                            Baris pertama pada file Excel harus
+                            menggunakan nama kolom berikut:
+
+                        </p>
+
+
+
+                        <div class="table-responsive">
+
+
+                            <table class="table table-sm table-bordered bg-white mb-2">
+
+
+                                <thead class="thead-light">
+
+                                <tr>
+
+                                    <th>tahun</th>
+                                    <th>komoditas</th>
+                                    <th>produksi</th>
+                                    <th>satuan</th>
+                                    <th>keterangan</th>
+
+                                </tr>
+
+                                </thead>
+
+
+                                <tbody>
+
+
+                                <tr>
+
+                                    <td>2015</td>
+                                    <td>Kelapa Sawit</td>
+                                    <td>2977.64</td>
+                                    <td>Ton</td>
+                                    <td>Data BPS</td>
+
+                                </tr>
+
+
+                                <tr>
+
+                                    <td>2016</td>
+                                    <td>Kelapa Sawit</td>
+                                    <td>3514.50</td>
+                                    <td>Ton</td>
+                                    <td>Data BPS</td>
+
+                                </tr>
+
+
+                                </tbody>
+
+
+                            </table>
+
+
+                        </div>
+
+
+
+                        <small class="text-danger">
+
+                            <i class="fas fa-exclamation-triangle mr-1"></i>
+
+                            Kolom wajib:
+                            <strong>tahun</strong>,
+                            <strong>komoditas</strong>,
+                            dan
+                            <strong>produksi</strong>.
+
+                        </small>
+
+
+                        <br>
+
+
+                        <small class="text-muted">
+
+                            Kolom
+                            <strong>satuan</strong>
+                            dan
+                            <strong>keterangan</strong>
+                            bersifat opsional.
+
+                        </small>
+
+
+                    </div>
+
+
+
+                    <!-- CATATAN DUPLIKASI -->
+
+                    <div class="alert alert-info mt-3 mb-0">
+
+
+                        <i class="fas fa-shield-alt mr-1"></i>
+
+                        Jika data dengan
+                        <strong>komoditas dan tahun yang sama</strong>
+                        sudah terdapat di database, data tersebut
+                        akan dilewati agar tidak terjadi duplikasi.
+
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- FOOTER -->
+
+                <div class="modal-footer">
+
+
+                    <button
+                        type="button"
+                        class="btn btn-outline-secondary"
+                        data-dismiss="modal"
+                    >
+
+                        <i class="fas fa-times mr-1"></i>
+
+                        Batal
+
+                    </button>
+
+
+                    <button
+                        type="submit"
+                        class="btn btn-success"
+                    >
+
+                        <i class="fas fa-upload mr-1"></i>
+
+                        Upload Data Excel
+
+                    </button>
+
+
+                </div>
+
+
+            </form>
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+{% endif %}
+
+
+
+
+<!-- =========================================================
+     SCRIPT
+========================================================== -->
+
+
+<script src="{{ url_for('static', filename='plugins/jquery/jquery.min.js') }}"></script>
+
+<script src="{{ url_for('static', filename='plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+
+<script src="{{ url_for('static', filename='dist/js/adminlte.min.js') }}"></script>
+
+
+
+<script>
+
+
+/* ==========================================================
+   NAMA FILE EXCEL
+========================================================== */
+
+
+function tampilkanNamaFile(input) {
+
+    var label = document.getElementById('labelFileExcel');
+
+    if (
+        input.files &&
+        input.files.length > 0
+    ) {
+
+        label.innerText = input.files[0].name;
+
+    } else {
+
+        label.innerText = 'Pilih file .xlsx...';
+
+    }
+
+}
+
+
+
+
+/* ==========================================================
+   TAMBAH KOMODITAS BARU
+========================================================== */
+
+
+function handleKomoditasChange(select) {
+
+
+    const containerBaru =
+        document.getElementById(
+            'container-komoditas-baru'
+        );
+
+
+    const inputBaru =
+        document.getElementById(
+            'input-komoditas-baru'
+        );
+
+
+    if (select.value === '__LAINNYA__') {
+
+
+        containerBaru.classList.remove('d-none');
+
+        inputBaru.setAttribute(
+            'required',
+            'required'
+        );
+
+        inputBaru.value = '';
+
+        inputBaru.focus();
+
+
+        select.removeAttribute('name');
+
+        inputBaru.setAttribute(
+            'name',
+            'komoditas'
+        );
+
+
+    } else {
+
+
+        containerBaru.classList.add('d-none');
+
+        inputBaru.removeAttribute('required');
+
+        inputBaru.removeAttribute('name');
+
+        select.setAttribute(
+            'name',
+            'komoditas'
+        );
+
+
+    }
+
+
+}
+
+
+
+
+function batalTambahBaru() {
+
+
+    const select =
+        document.getElementById(
+            'select-komoditas'
+        );
+
+
+    if (!select) {
+        return;
+    }
+
+
+    select.selectedIndex = 0;
+
+    handleKomoditasChange(select);
+
+
+}
+
+
+
+
+/* ==========================================================
+   MEMBUAT FILTER KOMODITAS OTOMATIS DARI TABEL
+========================================================== */
+
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+
+
+        var table =
+            document.getElementById(
+                "tabelData"
+            );
+
+
+        var select =
+            document.getElementById(
+                "selectKomoditas"
+            );
+
+
+        if (!table || !select) {
+            return;
+        }
+
+
+        var tr =
+            table.getElementsByTagName(
+                "tr"
+            );
+
+
+        var komoditasSet =
+            new Set();
+
+
+
+        for (
+            var i = 1;
+            i < tr.length;
+            i++
+        ) {
+
+
+            var td =
+                tr[i]
+                    .getElementsByTagName(
+                        "td"
+                    )[3];
+
+
+            if (td) {
+
+
+                var teks =
+                    td.textContent ||
+                    td.innerText;
+
+
+                if (
+                    teks.trim() !== ""
+                ) {
+
+                    komoditasSet.add(
+                        teks.trim()
+                    );
+
+                }
+
+
+            }
+
+
+        }
+
+
+
+        Array
+            .from(komoditasSet)
+            .sort()
+            .forEach(
+                function(item) {
+
+
+                    var option =
+                        document.createElement(
+                            "option"
+                        );
+
+
+                    option.value = item;
+
+                    option.text = item;
+
+                    select.appendChild(
+                        option
+                    );
+
+
+                }
+            );
+
+
+    }
+);
+
+
+
+
+/* ==========================================================
+   FILTER TABEL
+========================================================== */
+
+
+function filterTabel() {
+
+
+    var filterKomoditas =
+        document
+            .getElementById(
+                "selectKomoditas"
+            )
+            .value
+            .toUpperCase();
+
+
+    var filterCari =
+        document
+            .getElementById(
+                "inputCari"
+            )
+            .value
+            .toUpperCase();
+
+
+    var table =
+        document.getElementById(
+            "tabelData"
+        );
+
+
+    var tr =
+        table.getElementsByTagName(
+            "tr"
+        );
+
+
+
+    for (
+        var i = 1;
+        i < tr.length;
+        i++
+    ) {
+
+
+        var tdKomoditas =
+            tr[i]
+                .getElementsByTagName(
+                    "td"
+                )[3];
+
+
+        var rowText =
+            tr[i].textContent ||
+            tr[i].innerText;
+
+
+        if (tdKomoditas) {
+
+
+            var txtKomoditas =
+                tdKomoditas.textContent ||
+                tdKomoditas.innerText;
+
+
+            var cocokKomoditas =
+                (
+                    filterKomoditas === ""
+                    ||
+                    txtKomoditas
+                        .toUpperCase()
+                        .trim()
+                    === filterKomoditas
+                );
+
+
+            var cocokCari =
+                (
+                    filterCari === ""
+                    ||
+                    rowText
+                        .toUpperCase()
+                        .indexOf(
+                            filterCari
+                        ) > -1
+                );
+
+
+            if (
+                cocokKomoditas &&
+                cocokCari
+            ) {
+
+                tr[i].style.display = "";
+
+            } else {
+
+                tr[i].style.display = "none";
+
+            }
+
+
+        }
+
+
+    }
+
+
+}
+
+
+</script>
+
+
+</body>
+</html>

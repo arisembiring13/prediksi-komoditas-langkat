@@ -1,0 +1,1453 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Tentang - Sistem Prediksi Komoditas Perkebunan</title>
+
+    <!-- Bootstrap 5 -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <!-- FontAwesome -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    >
+
+    <!-- Google Font -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background: #f4f6f9;
+            color: #1f2937;
+        }
+
+
+        /* ==============================
+           SIDEBAR
+        ============================== */
+
+        .sidebar {
+            width: 260px;
+            height: 100vh;
+            background: #0B192C;
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+            box-shadow: 3px 0 15px rgba(0,0,0,0.08);
+        }
+
+
+        .sidebar-brand {
+            padding: 20px 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+
+
+        .brand-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+
+        /* LOGO PREDIKSI LANGKAT */
+        .brand-logo {
+            width: 55px;
+            height: 55px;
+            object-fit: contain;
+            flex-shrink: 0;
+            display: block;
+        }
+
+
+        .brand-title {
+            color: white;
+            font-size: 13px;
+            font-weight: 700;
+            line-height: 1.35;
+        }
+
+
+        .brand-subtitle {
+            color: #94a3b8;
+            font-size: 11px;
+            margin-top: 3px;
+        }
+
+
+        .sidebar-menu {
+            padding: 22px 14px;
+            flex: 1;
+        }
+
+
+        .menu-title {
+            color: #64748b;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 0 12px;
+            margin-bottom: 10px;
+        }
+
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            color: #cbd5e1;
+            text-decoration: none;
+            padding: 12px 14px;
+            border-radius: 10px;
+            margin-bottom: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+
+
+        .sidebar-link i {
+            width: 20px;
+            text-align: center;
+        }
+
+
+        .sidebar-link:hover {
+            color: white;
+            background: rgba(255,255,255,0.08);
+        }
+
+
+        .sidebar-link.active {
+            background: #2563eb;
+            color: white;
+        }
+
+
+        /* ==============================
+           USER SIDEBAR
+        ============================== */
+
+        .sidebar-user {
+            border-top: 1px solid rgba(255,255,255,0.08);
+            padding: 18px;
+        }
+
+
+        .user-box {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            margin-bottom: 12px;
+        }
+
+
+        .user-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: #1e40af;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+
+        .user-name {
+            color: white;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+
+        .user-role {
+            color: #94a3b8;
+            font-size: 11px;
+        }
+
+
+        .logout-btn {
+            display: block;
+            width: 100%;
+            text-decoration: none;
+            color: #fecaca;
+            border: 1px solid rgba(239,68,68,0.25);
+            padding: 9px;
+            text-align: center;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+
+        .logout-btn:hover {
+            background: #dc2626;
+            color: white;
+        }
+
+
+        /* ==============================
+           MAIN CONTENT
+        ============================== */
+
+        .main-content {
+            margin-left: 260px;
+            min-height: 100vh;
+        }
+
+
+        .top-header {
+            height: 70px;
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            position: sticky;
+            top: 0;
+            z-index: 900;
+        }
+
+
+        .page-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin: 0;
+        }
+
+
+        .page-subtitle {
+            font-size: 12px;
+            color: #64748b;
+            margin: 2px 0 0;
+        }
+
+
+        .content-area {
+            padding: 32px 28px 40px;
+        }
+
+
+        /* ==============================
+           ABOUT HEADER
+        ============================== */
+
+        .about-heading {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+
+        .about-heading h1 {
+            color: #2563eb;
+            font-size: 30px;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+
+
+        .about-heading p {
+            color: #94a3b8;
+            font-size: 13px;
+            margin-bottom: 14px;
+        }
+
+
+        .heading-line {
+            width: 330px;
+            max-width: 70%;
+            height: 1px;
+            background: #dbe2ea;
+            margin: auto;
+        }
+
+
+        /* ==============================
+           CARDS
+        ============================== */
+
+        .about-card {
+            background: white;
+            border-radius: 16px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 7px 24px rgba(15, 23, 42, 0.08);
+        }
+
+
+        .profile-card {
+            padding: 26px 24px;
+            height: 100%;
+        }
+
+
+        /* ==============================
+           FOTO PROFIL
+        ============================== */
+
+        .profile-photo-wrap {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+
+        .profile-photo {
+            width: 125px;
+            height: 125px;
+            border-radius: 50%;
+            object-fit: cover;
+            object-position: center 30%;
+            border: 4px solid white;
+            outline: 3px solid #2563eb;
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.18);
+        }
+
+
+        .profile-placeholder {
+            width: 125px;
+            height: 125px;
+            border-radius: 50%;
+            border: 4px solid white;
+            outline: 3px solid #2563eb;
+            background: #dbeafe;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #2563eb;
+            font-size: 52px;
+            margin: auto;
+        }
+
+
+        .about-me-label {
+            text-align: center;
+            font-size: 10px;
+            color: #64748b;
+            letter-spacing: 1.5px;
+            font-weight: 700;
+            margin-top: 18px;
+        }
+
+
+        .profile-name {
+            text-align: center;
+            color: #2563eb;
+            font-size: 22px;
+            font-weight: 800;
+            margin-top: 2px;
+        }
+
+
+        .profile-location {
+            text-align: center;
+            color: #64748b;
+            font-size: 12px;
+            margin-bottom: 17px;
+        }
+
+
+        /* ==============================
+           PROFILE TAG
+        ============================== */
+
+        .profile-tags {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 7px;
+            margin-bottom: 20px;
+        }
+
+
+        .profile-tag {
+            border: 1px solid #bfdbfe;
+            background: #eff6ff;
+            color: #2563eb;
+            border-radius: 20px;
+            padding: 4px 10px;
+            font-size: 10px;
+        }
+
+
+        .profile-divider {
+            border-top: 1px solid #edf0f3;
+            margin: 12px 0 18px;
+        }
+
+
+        /* ==============================
+           PROFILE INFO
+        ============================== */
+
+        .profile-info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px 14px;
+        }
+
+
+        .profile-info-label {
+            color: #94a3b8;
+            font-size: 10px;
+            margin-bottom: 3px;
+        }
+
+
+        .profile-info-value {
+            color: #111827;
+            font-size: 12px;
+            font-weight: 700;
+            line-height: 1.4;
+        }
+
+
+        .profile-info-full {
+            grid-column: 1 / -1;
+        }
+
+
+        /* ==============================
+           RIGHT CONTENT
+        ============================== */
+
+        .info-card {
+            padding: 25px 28px;
+            margin-bottom: 18px;
+        }
+
+
+        .card-title-blue {
+            color: #2563eb;
+            font-weight: 800;
+            font-size: 17px;
+            margin-bottom: 13px;
+        }
+
+
+        .card-title-green {
+            color: #15803d;
+            font-weight: 800;
+            font-size: 17px;
+            margin-bottom: 17px;
+        }
+
+
+        .profile-text {
+            font-size: 13px;
+            color: #475569;
+            line-height: 1.8;
+            text-align: justify;
+            margin-bottom: 12px;
+        }
+
+
+        /* ==============================
+           MANFAAT SISTEM
+        ============================== */
+
+        .benefit-item {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+
+        .benefit-icon {
+            width: 40px;
+            height: 40px;
+            min-width: 40px;
+            border-radius: 10px;
+            background: #ecfdf5;
+            color: #16a34a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+
+        .benefit-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: #334155;
+            margin-bottom: 3px;
+        }
+
+
+        .benefit-desc {
+            font-size: 11px;
+            color: #64748b;
+            line-height: 1.6;
+        }
+
+
+        .system-note {
+            margin-top: 18px;
+            background: #eff6ff;
+            border: 1px solid #dbeafe;
+            border-radius: 12px;
+            padding: 15px 17px;
+            font-size: 12px;
+            color: #475569;
+            line-height: 1.7;
+        }
+
+
+        /* ==============================
+           RESPONSIVE
+        ============================== */
+
+        .mobile-menu-button {
+            display: none;
+        }
+
+
+        @media (max-width: 992px) {
+
+            .sidebar {
+                transform: translateX(-100%);
+                transition: .3s;
+            }
+
+
+            .sidebar.show {
+                transform: translateX(0);
+            }
+
+
+            .main-content {
+                margin-left: 0;
+            }
+
+
+            .mobile-menu-button {
+                display: inline-block;
+            }
+
+
+            .content-area {
+                padding: 22px 16px 35px;
+            }
+
+        }
+
+
+        @media (max-width: 576px) {
+
+            .profile-info-grid {
+                grid-template-columns: 1fr;
+            }
+
+
+            .profile-info-full {
+                grid-column: auto;
+            }
+
+
+            .top-header {
+                padding: 0 15px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ==========================================
+     SIDEBAR
+=========================================== -->
+
+<div class="sidebar" id="sidebar">
+
+
+    <!-- BRAND -->
+    <div class="sidebar-brand">
+
+        <div class="brand-wrapper">
+
+
+            <!-- LOGO PREDIKSI LANGKAT -->
+            <img
+                src="{{ url_for('static', filename='images/logo.png') }}"
+                alt="Logo Prediksi Langkat"
+                class="brand-logo"
+            >
+
+
+            <div>
+
+                <div class="brand-title">
+
+                    Sistem Prediksi<br>
+                    Komoditas Perkebunan
+
+                </div>
+
+
+                <div class="brand-subtitle">
+
+                    Kabupaten Langkat
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ==========================================
+         MENU
+    =========================================== -->
+
+    <div class="sidebar-menu">
+
+
+        <div class="menu-title">
+
+            Menu Utama
+
+        </div>
+
+
+
+        <!-- BERANDA -->
+        <a
+            href="{{ url_for('dashboard') }}"
+            class="sidebar-link"
+        >
+
+            <i class="fas fa-home"></i>
+
+            <span>
+                Beranda
+            </span>
+
+        </a>
+
+
+
+        <!-- DATA PRODUKSI -->
+        <a
+            href="{{ url_for('data') }}"
+            class="sidebar-link"
+        >
+
+            <i class="fas fa-database"></i>
+
+            <span>
+                Data Produksi
+            </span>
+
+        </a>
+
+
+
+        <!-- PREDIKSI -->
+        <a
+            href="{{ url_for('prediksi') }}"
+            class="sidebar-link"
+        >
+
+            <i class="fas fa-chart-line"></i>
+
+            <span>
+                Prediksi
+            </span>
+
+        </a>
+
+
+
+        <!-- EVALUASI -->
+        <a
+            href="{{ url_for('evaluasi') }}"
+            class="sidebar-link"
+        >
+
+            <i class="fas fa-chart-bar"></i>
+
+            <span>
+                Evaluasi
+            </span>
+
+        </a>
+
+
+
+        <!-- KHUSUS ADMIN -->
+        {% if session.get('role') == 'admin' %}
+
+        <a
+            href="{{ url_for('kelola_pengguna') }}"
+            class="sidebar-link"
+        >
+
+            <i class="fas fa-users-cog"></i>
+
+            <span>
+                Kelola Pengguna
+            </span>
+
+        </a>
+
+        {% endif %}
+
+
+
+        <!-- TENTANG -->
+        <a
+            href="{{ url_for('tentang') }}"
+            class="sidebar-link active"
+        >
+
+            <i class="fas fa-circle-info"></i>
+
+            <span>
+                Tentang
+            </span>
+
+        </a>
+
+
+    </div>
+
+
+
+    <!-- ==========================================
+         USER
+    =========================================== -->
+
+    <div class="sidebar-user">
+
+
+        <div class="user-box">
+
+
+            <div class="user-avatar">
+
+                <i class="fas fa-user"></i>
+
+            </div>
+
+
+            <div>
+
+
+                <div class="user-name">
+
+                    {{ session.get(
+                        'nama_user',
+                        session.get(
+                            'username',
+                            'Pengguna'
+                        )
+                    ) }}
+
+                </div>
+
+
+                <div class="user-role">
+
+                    {% if session.get('role') == 'admin' %}
+
+                        Administrator
+
+                    {% else %}
+
+                        Pengguna
+
+                    {% endif %}
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+
+        <a
+            href="{{ url_for('logout') }}"
+            class="logout-btn"
+        >
+
+            <i class="fas fa-right-from-bracket me-1"></i>
+
+            Logout
+
+        </a>
+
+
+    </div>
+
+
+</div>
+
+
+
+<!-- ==========================================
+     MAIN CONTENT
+=========================================== -->
+
+<div class="main-content">
+
+
+    <!-- ==========================================
+         TOP HEADER
+    =========================================== -->
+
+    <div class="top-header">
+
+
+        <div class="d-flex align-items-center gap-3">
+
+
+            <!-- TOMBOL MOBILE -->
+            <button
+                class="btn btn-outline-secondary mobile-menu-button"
+                onclick="toggleSidebar()"
+            >
+
+                <i class="fas fa-bars"></i>
+
+            </button>
+
+
+            <div>
+
+                <h5 class="page-title">
+
+                    Tentang Sistem
+
+                </h5>
+
+
+                <p class="page-subtitle">
+
+                    Informasi sistem dan profil pembuat aplikasi
+
+                </p>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- USER HEADER -->
+        <div class="text-muted small">
+
+            <i class="fas fa-user-circle me-1"></i>
+
+            {{ session.get(
+                'nama_user',
+                session.get(
+                    'username',
+                    'Pengguna'
+                )
+            ) }}
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- ==========================================
+         CONTENT
+    =========================================== -->
+
+    <div class="content-area">
+
+
+        <!-- ABOUT HEADING -->
+        <div class="about-heading">
+
+
+            <h1>
+
+                Tentang Sistem
+
+            </h1>
+
+
+            <p>
+
+                Prediksi Produksi Komoditas Perkebunan Kabupaten Langkat
+
+            </p>
+
+
+            <div class="heading-line"></div>
+
+
+        </div>
+
+
+
+        <!-- ==========================================
+             CONTENT ROW
+        =========================================== -->
+
+        <div class="row g-4 justify-content-center">
+
+
+
+            <!-- ======================================
+                 PROFIL KIRI
+            ======================================= -->
+
+            <div class="col-xl-4 col-lg-5">
+
+
+                <div class="about-card profile-card">
+
+
+
+                    <!-- FOTO -->
+                    <div class="profile-photo-wrap">
+
+
+                        <img
+                            src="{{ url_for('static', filename='images/ari.jpeg') }}"
+                            alt="Foto Ari Sanjaya Sembiring"
+                            class="profile-photo"
+                        >
+
+
+                    </div>
+
+
+
+                    <!-- ABOUT ME -->
+                    <div class="about-me-label">
+
+                        ABOUT ME
+
+                    </div>
+
+
+
+                    <!-- NAMA -->
+                    <div class="profile-name">
+
+                        Ari Sanjaya Sembiring
+
+                    </div>
+
+
+
+                    <!-- LOKASI -->
+                    <div class="profile-location">
+
+                        Kabupaten Langkat, Sumatera Utara
+
+                    </div>
+
+
+
+                    <!-- TAG -->
+                    <div class="profile-tags">
+
+
+                        <span class="profile-tag">
+
+                            <i class="fas fa-code me-1"></i>
+
+                            Teknik Informatika
+
+                        </span>
+
+
+                        <span class="profile-tag">
+
+                            <i class="fas fa-chart-line me-1"></i>
+
+                            Data Science
+
+                        </span>
+
+
+                    </div>
+
+
+
+                    <div class="profile-divider"></div>
+
+
+
+                    <!-- ======================================
+                         INFORMASI PROFIL
+                    ======================================= -->
+
+                    <div class="profile-info-grid">
+
+
+
+                        <!-- NAMA LENGKAP -->
+                        <div>
+
+                            <div class="profile-info-label">
+
+                                Nama Lengkap
+
+                            </div>
+
+                            <div class="profile-info-value">
+
+                                Ari Sanjaya Sembiring
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- STATUS -->
+                        <div>
+
+                            <div class="profile-info-label">
+
+                                Status
+
+                            </div>
+
+                            <div class="profile-info-value">
+
+                                Mahasiswa
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- JURUSAN -->
+                        <div>
+
+                            <div class="profile-info-label">
+
+                                Jurusan
+
+                            </div>
+
+                            <div class="profile-info-value">
+
+                                Teknik Informatika
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- PENELITIAN -->
+                        <div>
+
+                            <div class="profile-info-label">
+
+                                Penelitian
+
+                            </div>
+
+                            <div class="profile-info-value">
+
+                                Algoritma Prophet
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- PERGURUAN TINGGI -->
+                        <div class="profile-info-full">
+
+                            <div class="profile-info-label">
+
+                                Perguruan Tinggi
+
+                            </div>
+
+                            <div class="profile-info-value">
+
+                                Institut Teknologi dan Bisnis Indonesia
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- ======================================
+                 INFORMASI KANAN
+            ======================================= -->
+
+            <div class="col-xl-7 col-lg-7">
+
+
+
+                <!-- ======================================
+                     PROFIL PEMBUAT
+                ======================================= -->
+
+                <div class="about-card info-card">
+
+
+                    <div class="card-title-blue">
+
+                        Profil Pembuat
+
+                    </div>
+
+
+
+                    <p class="profile-text">
+
+                        Saya <strong>Ari Sanjaya Sembiring</strong>,
+                        mahasiswa Program Studi Teknik Informatika.
+                        Website ini dikembangkan sebagai bagian dari penelitian
+                        skripsi mengenai penerapan algoritma
+                        <strong>Prophet</strong> untuk memprediksi produksi
+                        komoditas perkebunan di Kabupaten Langkat berbasis
+                        data Badan Pusat Statistik (BPS).
+
+                    </p>
+
+
+
+                    <p class="profile-text">
+
+                        Sistem ini dirancang untuk mengolah data historis
+                        produksi komoditas perkebunan, melakukan proses
+                        prediksi berdasarkan pola data deret waktu,
+                        serta menampilkan hasil prediksi dalam bentuk
+                        tabel dan grafik agar informasi lebih mudah
+                        dipahami oleh pengguna.
+
+                    </p>
+
+
+
+                    <p class="profile-text mb-0">
+
+                        Selain menghasilkan prediksi periode mendatang,
+                        sistem juga menyediakan proses evaluasi model
+                        menggunakan nilai <strong>MAE, MAPE, RMSE,
+                        dan R²</strong> sebagai ukuran kinerja model Prophet.
+
+                    </p>
+
+
+                </div>
+
+
+
+                <!-- ======================================
+                     MANFAAT SISTEM
+                ======================================= -->
+
+                <div class="about-card info-card">
+
+
+                    <div class="card-title-green">
+
+                        Manfaat Sistem
+
+                    </div>
+
+
+
+                    <div class="row">
+
+
+
+                        <!-- MANFAAT 1 -->
+                        <div class="col-md-6">
+
+
+                            <div class="benefit-item">
+
+
+                                <div class="benefit-icon">
+
+                                    <i class="fas fa-chart-line"></i>
+
+                                </div>
+
+
+                                <div>
+
+
+                                    <div class="benefit-title">
+
+                                        Informasi Prediksi Produksi
+
+                                    </div>
+
+
+                                    <div class="benefit-desc">
+
+                                        Menampilkan hasil prediksi produksi
+                                        komoditas perkebunan untuk beberapa
+                                        tahun mendatang.
+
+                                    </div>
+
+
+                                </div>
+
+
+                            </div>
+
+
+                        </div>
+
+
+
+                        <!-- MANFAAT 2 -->
+                        <div class="col-md-6">
+
+
+                            <div class="benefit-item">
+
+
+                                <div class="benefit-icon">
+
+                                    <i class="fas fa-database"></i>
+
+                                </div>
+
+
+                                <div>
+
+
+                                    <div class="benefit-title">
+
+                                        Pemanfaatan Data Historis
+
+                                    </div>
+
+
+                                    <div class="benefit-desc">
+
+                                        Membantu memanfaatkan data historis
+                                        produksi perkebunan yang tersedia
+                                        sebagai dasar proses prediksi.
+
+                                    </div>
+
+
+                                </div>
+
+
+                            </div>
+
+
+                        </div>
+
+
+
+                        <!-- MANFAAT 3 -->
+                        <div class="col-md-6">
+
+
+                            <div class="benefit-item">
+
+
+                                <div class="benefit-icon">
+
+                                    <i class="fas fa-chart-pie"></i>
+
+                                </div>
+
+
+                                <div>
+
+
+                                    <div class="benefit-title">
+
+                                        Evaluasi Akurasi Model
+
+                                    </div>
+
+
+                                    <div class="benefit-desc">
+
+                                        Menampilkan MAE, MAPE, RMSE dan R²
+                                        untuk mengetahui kinerja model
+                                        Prophet terhadap data historis.
+
+                                    </div>
+
+
+                                </div>
+
+
+                            </div>
+
+
+                        </div>
+
+
+
+                        <!-- MANFAAT 4 -->
+                        <div class="col-md-6">
+
+
+                            <div class="benefit-item">
+
+
+                                <div class="benefit-icon">
+
+                                    <i class="fas fa-lightbulb"></i>
+
+                                </div>
+
+
+                                <div>
+
+
+                                    <div class="benefit-title">
+
+                                        Pendukung Informasi
+
+                                    </div>
+
+
+                                    <div class="benefit-desc">
+
+                                        Memberikan informasi tambahan
+                                        mengenai kecenderungan produksi
+                                        sebagai bahan pendukung perencanaan.
+
+                                    </div>
+
+
+                                </div>
+
+
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+
+
+
+                    <!-- ======================================
+                         JUDUL PENELITIAN
+                    ======================================= -->
+
+                    <div class="system-note">
+
+
+                        <i class="fas fa-circle-info text-primary me-2"></i>
+
+
+                        <strong>
+                            Judul Penelitian:
+                        </strong>
+
+                        <br>
+
+
+                        Penerapan Algoritma Prophet untuk Memprediksi
+                        Produksi Komoditas Perkebunan di Kabupaten Langkat
+                        Berbasis Data BPS.
+
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+
+<!-- ==========================================
+     BOOTSTRAP
+=========================================== -->
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js">
+</script>
+
+
+
+<!-- ==========================================
+     JAVASCRIPT
+=========================================== -->
+
+<script>
+
+    function toggleSidebar() {
+
+        document
+            .getElementById('sidebar')
+            .classList
+            .toggle('show');
+
+    }
+
+</script>
+
+
+</body>
+</html>
