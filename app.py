@@ -536,7 +536,6 @@ def hapus_data(id):
 @app.route('/prediksi', methods=['GET', 'POST'])
 @login_required
 def prediksi():
-    from prophet import Prophet
     db = koneksi()
     cursor = db.cursor()
 
@@ -559,6 +558,7 @@ def prediksi():
     tahun_prediksi = 5
 
     if request.method == 'POST':
+        from prophet import Prophet
         komoditas_pilihan = request.form.get('komoditas')
         tahun_prediksi = int(request.form.get('tahun_prediksi', 5))
 
